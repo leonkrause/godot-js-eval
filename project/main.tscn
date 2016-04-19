@@ -1,0 +1,163 @@
+[gd_scene load_steps=6 format=1]
+
+[ext_resource path="res://line_edit.gd" type="Script" id=1]
+[ext_resource path="res://eval_button.gd" type="Script" id=2]
+[ext_resource path="res://inconsolata.fnt" type="Font" id=3]
+[ext_resource path="res://output.gd" type="Script" id=4]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Control\n\nconst MOUSE_BUTTON_LEFT = 1\n\nfunc _ready():\n\tset_process_input( true )\n\tget_close_button().hide()\n\tcall_deferred( \"popup_centered\" )\n\nfunc _input( event ):\n\tif event.type==InputEvent.MOUSE_BUTTON and event.button_index==MOUSE_BUTTON_LEFT and not event.is_pressed():\n\t\tvar drag_rect = get_rect();\n\t\tdrag_rect.size.height = -4;\n\t\tif not get_viewport_rect().intersects( drag_rect ):\n\t\t\tpopup_centered()\n"
+
+[node name="Control" type="Control"]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 0.0
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 53.0
+margin/right = 70.0
+margin/bottom = 0.0
+use_top_left = false
+
+[node name="WindowDialog" type="WindowDialog" parent="."]
+
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = -60.0
+margin/top = -20.0
+margin/right = 319.0
+margin/bottom = 311.0
+popup/exclusive = true
+window/title = ""
+script/script = SubResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WindowDialog"]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 7.0
+margin/top = 7.0
+margin/right = 7.0
+margin/bottom = 7.0
+alignment = 0
+
+[node name="LineEdit" type="LineEdit" parent="WindowDialog/VBoxContainer"]
+
+rect/min_size = Vector2( 300, 0 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 365.0
+margin/bottom = 23.0
+text = ".().()"
+max_length = 0
+editable = true
+secret = false
+script/script = ExtResource( 1 )
+option_button_path = NodePath("../HBoxContainer/OptionButton")
+output_path = NodePath("../TextEdit")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="WindowDialog/VBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 27.0
+margin/right = 365.0
+margin/bottom = 46.0
+alignment = 0
+
+[node name="Label" type="Label" parent="WindowDialog/VBoxContainer/HBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+margin/left = 0.0
+margin/top = 3.0
+margin/right = 71.0
+margin/bottom = 16.0
+text = "Return type:"
+align = 2
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="OptionButton" type="OptionButton" parent="WindowDialog/VBoxContainer/HBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 75.0
+margin/top = 0.0
+margin/right = 324.0
+margin/bottom = 19.0
+toggle_mode = false
+text = "Nil"
+flat = false
+align = 0
+selected = 0
+items = [ "Nil", null, false, 0, null, "Bool", null, false, 1, null, "Int", null, false, 2, null, "String", null, false, 4, null ]
+
+[node name="Button" type="Button" parent="WindowDialog/VBoxContainer/HBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 328.0
+margin/top = 0.0
+margin/right = 365.0
+margin/bottom = 19.0
+toggle_mode = false
+text = "Eval"
+flat = false
+script/script = ExtResource( 2 )
+line_edit_path = NodePath("../../LineEdit")
+
+[node name="TextEdit" type="TextEdit" parent="WindowDialog/VBoxContainer"]
+
+rect/min_size = Vector2( 0, 200 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 50.0
+margin/right = 365.0
+margin/bottom = 317.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/current_line_color = Color( 0, 0, 0, 0 )
+script/script = ExtResource( 4 )
+
+
