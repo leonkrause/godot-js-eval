@@ -1,10 +1,10 @@
 extends LineEdit
 
-export(NodePath) var option_button_path
-onready var option_button = get_node( option_button_path )
+const Util = preload("res://utility.gd")
 
-export(NodePath) var output_path
-onready var output = get_node( output_path )
+#export(NodePath) onready var option_button = get_node( option_button )
+export(NodePath) onready var output = get_node( output )
+export(NodePath) onready var context_toggle = get_node( context_toggle )
 
 var JavaScript
 
@@ -21,22 +21,17 @@ static func get_raw_utf8(string):
 func _init():
 	if Globals.has_singleton( "JavaScript" ):
 		JavaScript = Globals.get_singleton( "JavaScript" )
-	connect( "text_entered", self, "_on_text_entered" )
+	connect( "text_entered", self, "eval" )
 
 func _ready():
 	if !JavaScript:
-		output.print_line( "No JavaScript available!" )
+		output.print_line( "ERROR", "No JavaScript available!" )
 
-func eval( code, mode ):
+func eval( code ):
 	if JavaScript:
-		var result = JavaScript.eval( code, mode )
-		prints( "VARIANT TYPE:", typeof( result ) )
-		if str(result)!="":
-			output.print_line( result )
-			output.print_line( get_raw_utf8(str(result)) ) 
-
-func _on_text_entered( text ):
-	send()
+		var result = JavaScript.eval( code, context_toggle.is_pressed() )
+		output.print_line( Util.type_string_of(result), str(result) )
+		#output.print_line( "UTF8", get_raw_utf8(str(result)) ) 
 
 func send():
-	eval( get_text(), option_button.get_selected_ID() )
+	eval( get_text() )
